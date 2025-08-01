@@ -44,19 +44,19 @@ timeline.push({
 });
 
 // Step 3: Show what was entered
-timeline.push({
-  type: jsPsychHtmlButtonResponse,
-  stimulus: function() {
-    const foods = jsPsych.data.get().last(1).values()[0];
-    const names = jsPsych.data.get().filter({trial_type: 'madlibs'}).last(1).values()[0].names;
+// timeline.push({
+//   type: jsPsychHtmlButtonResponse,
+//   stimulus: function() {
+//     const foods = jsPsych.data.get().last(1).values()[0];
+//     const names = jsPsych.data.get().filter({trial_type: 'madlibs'}).last(1).values()[0].names;
 
-    return names.map(p => {
-      const food = foods[`food_for_${p.name.toLowerCase()}`];
-      return `<p>${p.name}'s favorite food is: <strong>${food}</strong></p>`;
-    }).join('');
-  },
-  choices: ['Finish']
-});
+//     return names.map(p => {
+//       const food = foods[`food_for_${p.name.toLowerCase()}`];
+//       return `<p>${p.name}'s favorite food is: <strong>${food}</strong></p>`;
+//     }).join('');
+//   },
+//   choices: ['Finish']
+// });
 
 
 
