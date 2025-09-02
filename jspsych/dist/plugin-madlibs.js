@@ -134,7 +134,9 @@ var jsPsychMadlibs = (function(jspsych) {
           }
   
           display_element.innerHTML = '';
-          this.jsPsych.finishTrial({ names: responses });
+          const names = responses.map(r => r.name);
+          const pronouns = responses.map(r => r.pronoun || null);
+          this.jsPsych.finishTrial({ names, pronouns });
         });
       }
     }

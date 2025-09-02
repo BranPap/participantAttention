@@ -1,6 +1,6 @@
 var jsPsychSelfPacedReading = (function (jspsych) {
     "use strict";
-  
+
     const info = {
         name: 'self-paced-reading',
         parameters: {
@@ -33,79 +33,63 @@ var jsPsychSelfPacedReading = (function (jspsych) {
         }
 
         trial(display_element, trial) {
-            // Add custom CSS
             const customStyles = `
                 <style>
-                    @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Special+Elite&display=swap');
-                    
-                    .newspaper-container {
-                        background-color: #f4f1ea;
-                        border: 8px double #2c2c2c;
+                    body { margin: 0; font-family: 'Helvetica Neue', Arial, sans-serif; background: #ffffff; }
+                    .container {
+                        display: flex;
+                        flex-direction: column;
+                        align-items: center;
+                        justify-content: center;
+                        min-height: 100vh;
                         padding: 20px;
-                        max-width: 800px;
-                        margin: 20px auto;
-                        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+                        background: #ffffff;
                     }
-
                     .word-display {
-                        font-family: 'Playfair Display', serif;
-                        background: white;
-                        padding: 30px;
-                        border: 1px solid #2c2c2c;
+                        font-size: ${trial.font_size}px;
+                        padding: 20px;
                         margin: 20px 0;
-                        min-height: 100px;
+                        min-height: 80px;
                         display: flex;
                         align-items: center;
                         justify-content: center;
-                        box-shadow: 3px 3px 0 #2c2c2c;
+                        border-radius: 6px;
+                        background: #ffffff;
                     }
-
                     .instruction-text {
-                        font-family: 'Special Elite', cursive;
-                        color: #2c2c2c;
-                        text-align: center;
-                        margin: 15px 0;
+                        color: #555;
                         font-size: 16px;
-                    }
-
-                    .game-btn {
-                        font-family: 'Special Elite', cursive;
-                        background: #2c2c2c;
-                        color: #f4f1ea;
-                        border: none;
-                        padding: 12px 30px;
-                        margin: 10px;
-                        cursor: pointer;
-                        transition: all 0.2s;
-                        box-shadow: 3px 3px 0 #8b0000;
-                    }
-
-                    .game-btn:hover {
-                        transform: translateY(-2px);
-                        box-shadow: 5px 5px 0 #8b0000;
-                    }
-
-                    .game-btn:active {
-                        transform: translateY(0);
-                        box-shadow: 1px 1px 0 #8b0000;
-                    }
-
-                    .question-container {
-                        background: white;
-                        padding: 20px;
-                        border: 1px solid #2c2c2c;
-                        margin-bottom: 20px;
-                        font-family: 'Special Elite', cursive;
-                        box-shadow: 3px 3px 0 #2c2c2c;
-                    }
-
-                    .headline {
-                        font-family: 'Playfair Display', serif;
-                        font-size: 28px;
                         text-align: center;
+                        margin-top: 10px;
+                    }
+                    .question-container {
+                        background: #ffffff;
+                        padding: 20px;
+                        border-radius: 6px;
+                        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
                         margin-bottom: 20px;
-                        border-bottom: 2px solid #2c2c2c;
-                        padding-bottom: 10px;
+                        text-align: center;
+                    }
+                    .btn {
+                        background: #007bff;
+                        color: white;
+                        border: none;
+                        border-radius: 4px;
+                        padding: 10px 20px;
+                        margin: 5px;
+                        cursor: pointer;
+                        font-size: 16px;
+                        transition: background 0.2s;
+                    }
+                    .btn:hover {
+                        background: #0056b3;
+                    }
+                    .headline {
+                        font-size: 26px;
+                        font-weight: 600;
+                        margin-bottom: 20px;
+                        text-align: center;
+                        color: #333;
                     }
                 </style>
             `;
@@ -121,23 +105,19 @@ var jsPsychSelfPacedReading = (function (jspsych) {
                 inQuestionPhase = true;
                 questionStartTime = performance.now();
                 display_element.innerHTML = customStyles + `
-                    <div class="newspaper-container">
-                        <div class="headline">PROFANITY CHECK REQUIRED!</div>
+                    <div class="container">
+                        <div class="headline">Quick Check</div>
                         <div class="question-container">
                             ${trial.question}
                         </div>
-                        <div style="display: flex; justify-content: center; gap: 20px;">
-                            <button class="game-btn" data-response="true">
-                                TRUE
-                            </button>
-                            <button class="game-btn" data-response="false">
-                                FALSE
-                            </button>
+                        <div>
+                            <button class="btn" data-response="true">TRUE</button>
+                            <button class="btn" data-response="false">FALSE</button>
                         </div>
                     </div>
                 `;
 
-                const buttons = display_element.querySelectorAll('.game-btn');
+                const buttons = display_element.querySelectorAll('.btn');
                 buttons.forEach(button => {
                     button.addEventListener('click', (e) => {
                         const response = e.target.dataset.response === 'true';
@@ -156,10 +136,10 @@ var jsPsychSelfPacedReading = (function (jspsych) {
                 });
             };
 
-            // Initial display setup
+            // Initial display
             display_element.innerHTML = customStyles + `
-                <div class="newspaper-container">
-                    <div class="headline">QUOTES FROM THE STREETS</div>
+                <div class="container">
+                    <div class="headline">Self-Paced Reading</div>
                     <div class="word-display" id="word-display">
                         Press SPACEBAR to begin
                     </div>
