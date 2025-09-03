@@ -47,7 +47,7 @@ function shuffleArray(array) {
       trials.push({
         type: jsPsychSelfPacedReading,
         stimulus: `${capitalizeFirstLetter(element.name.toLowerCase())} is a ${profession} from ${country}. ${getNominative(element.pronouns)} ${element.pronouns === 'they/them' ? 'enjoy' : 'enjoys'} going to the ${place} on weekends.`,
-        question: `Does ${element.name} like to go to the ${randomPlace} on weekends?`,
+        question: `Does ${capitalizeFirstLetter(element.name.toLowerCase())} like to go to the ${randomPlace} on weekends?`,
         correct_answer: place === randomPlace, 
         data: {
           category: "spr",
