@@ -106,7 +106,7 @@ var jsPsychSelfPacedReading = (function (jspsych) {
                 questionStartTime = performance.now();
                 display_element.innerHTML = customStyles + `
                     <div class="container">
-                        <div class="headline">Quick Check</div>
+                        <div class="headline"></div>
                         <div class="question-container">
                             ${trial.question}
                         </div>
@@ -139,7 +139,7 @@ var jsPsychSelfPacedReading = (function (jspsych) {
             // Initial display
             display_element.innerHTML = customStyles + `
                 <div class="container">
-                    <div class="headline">Self-Paced Reading</div>
+                    <div class="headline"></div>
                     <div class="word-display" id="word-display">
                         Press SPACEBAR to begin
                     </div>

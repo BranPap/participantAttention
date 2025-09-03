@@ -5,11 +5,15 @@ function shuffleArray(array) {
     }
     return array;
   }
+
+  function capitalizeFirstLetter(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1)
+  }
   
   function getNominative(pronoun) {
     if (pronoun === "they/them") return "They";
     if (pronoun === "she/her") return "She";
-    if (pronoun === "he/him") return "He"; // fixed
+    if (pronoun === "he/him") return "He"; 
     return "They";
   }
   
@@ -24,11 +28,14 @@ function shuffleArray(array) {
   ]);
   
   const places = shuffleArray([
-    "park", "museum", "restaurant", "beach",
+    "park", "museum", "beach",
     "mountains", "zoo", "theater", "mall"
   ]);
   
-  function generateSelfPacedReadingTrials(stimuli) {
+  function generateSelfPacedReadingTrials(stimuli = { array: [
+    { name: "Jessica", pronouns: "she/her" },
+    { name: "Michael", pronouns: "he/him" }
+  ] }) {
     let trials = [];
   
     stimuli.array.forEach(element => {
@@ -39,7 +46,7 @@ function shuffleArray(array) {
   
       trials.push({
         type: jsPsychSelfPacedReading,
-        stimulus: `${element.name} is a ${profession} from ${country}. ${getNominative(element.pronouns)} enjoys going to the ${place} on weekends.`,
+        stimulus: `${capitalizeFirstLetter(element.name.toLowerCase())} is a ${profession} from ${country}. ${getNominative(element.pronouns)} ${element.pronouns === 'they/them' ? 'enjoy' : 'enjoys'} going to the ${place} on weekends.`,
         question: `Does ${element.name} like to go to the ${randomPlace} on weekends?`,
         correct_answer: place === randomPlace, 
         data: {

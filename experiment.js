@@ -17,7 +17,7 @@ const jsPsych = initJsPsych({
 });
 
 let timeline = [];
-const characterNumber = 1;
+const characterNumber = 2;
 
 // EXPERIMENT CODE //
 const conditions_list = shuffleArray(['MadLibs', 'Standard']);
@@ -39,18 +39,22 @@ const irb = {
 };
 timeline.push(irb);
 
-// Step 1: Collect names and pronouns
-timeline.push({
-  type: jsPsychMadlibs,
-  prompt: 'Please enter the names of three people you know and their pronouns.',
-  button_label: 'Continue',
-  n_names: characterNumber,
-  collect_pronouns: true,
-  on_finish: function(data) {
-    data.category = "gameData";
-    console.log("Collected names and pronouns: ", data);
-  }
-});
+// Step 0: Collect names and pronouns - only in Madlibs Condition
+
+if (condition === `MadLibs`) {
+  timeline.push({
+    type: jsPsychMadlibs,
+    prompt: `Please enter the names of ${characterNumber} people you know and their pronouns.`,
+    button_label: 'Continue',
+    n_names: characterNumber,
+    collect_pronouns: true,
+    on_finish: function(data) {
+      data.category = "gameData";
+      console.log("Collected names and pronouns: ", data);
+    }
+  });
+}
+
 
 // Helper: extract characters
 function getGameData() {
@@ -79,27 +83,154 @@ const spr_instructions = {
   on_finish: function(data) {
     data.category = "instructions";
     // Generate SPR trials only now, after names exist
-    const sprTrials = generateSelfPacedReadingTrials({ array: getGameData() });
-    jsPsych.addNodeToCurrentLocation({ timeline: sprTrials });
+    if (condition === "MadLibs") {
+      const sprTrials = generateSelfPacedReadingTrials({ array: getGameData() });
+      jsPsych.addNodeToCurrentLocation({ timeline: sprTrials });
+    }
+
   }
 };
 timeline.push(spr_instructions);
 
+
+if (condition === 'Standard') {
+  const sprTrialsStandard = generateSelfPacedReadingTrials()
+  timeline.push(...sprTrialsStandard);
+}
+
 // Demographics 
 
-const demographics = {
-  type: jsPsychSurveyText,
-  questions: [
-    { prompt: "What is your age?", name: 'age', required: true, type: 'number', min: 18, max: 100 },
-    { prompt: "What is your gender?", name: 'gender', required: true, type: 'text' },
-    { prompt: "What is your native language?", name: 'native_language', required: true, type: 'text' }
-  ],
-  button_label: 'Submit',
+const demoSurvey = {
+  type: jsPsychSurveyHtmlForm,
+  html: `
+  <style>
+    #survey-container {
+      font-family: 'Arial', sans-serif; 
+      line-height: 1.6; 
+      background-color: #ffffff; 
+      color: #333; 
+      margin: 0; 
+      padding: 20px;
+    }
+    #survey-container div {
+      margin-bottom: 20px; 
+      padding: 15px; 
+      background: #fff; 
+      border-radius: 8px; 
+    }
+    #survey-container p {
+      font-size: 16px; 
+      font-weight: bold; 
+      margin-bottom: 10px;
+    }
+    #survey-container label {
+      margin-right: 15px; 
+      font-size: 14px; 
+    }
+    #survey-container input[type='text'], 
+    #survey-container select, 
+    #survey-container textarea {
+      font-size: 14px; 
+      padding: 10px; 
+      border: 1px solid #ccc; 
+      border-radius: 5px; 
+      width: 100%; 
+      box-sizing: border-box;
+    }
+    #survey-container textarea { resize: vertical; }
+    .likert-scale {
+      display: flex; 
+      justify-content: space-between; 
+      margin-top: 10px;
+    }
+    .likert-scale label {
+      flex: 1; 
+      text-align: center; 
+      font-size: 13px;
+    }
+    .likert-scale input {
+      display: block; 
+      margin: 0 auto 5px auto;
+    }
+  </style>
+
+  <div id='survey-container'>
+
+    <div>
+      <p>Did you read the instructions and do you think you did the task correctly?</p>
+      <label><input type='radio' name='correct' value='Yes'> Yes</label>
+      <label><input type='radio' name='correct' value='No'> No</label>
+      <label><input type='radio' name='correct' value='I was confused'> I was confused</label>
+    </div>
+
+    <div>
+      <p>Gender:</p>
+      <select name='gender'>
+        <option value='null'> </option>
+        <option value='Female'>Female</option>
+        <option value='Male'>Male</option>
+        <option value='Non-binary/Non-conforming'>Non-binary/Non-conforming</option>
+        <option value='Other'>Other</option>
+      </select>
+    </div>
+
+    <div>
+      <p>Age:</p>
+      <input type='text' name='age' size='10'>
+    </div>
+
+    <div>
+      <p>Level of education:</p>
+      <select name='education'>
+        <option value='null'> </option>
+        <option value='Some high school'>Some high school</option>
+        <option value='Graduated high school'>Graduated high school</option>
+        <option value='Some college'>Some college</option>
+        <option value='Graduated college'>Graduated college</option>
+        <option value='Hold a higher degree'>Hold a higher degree</option>
+      </select>
+    </div>
+
+    <div>
+      <p>How fair was the payment for this experiment?</p>
+      <div class='likert-scale'>
+        <label><input type='radio' name='payment' value='1'>Very underpaid</label>
+        <label><input type='radio' name='payment' value='2'>2</label>
+        <label><input type='radio' name='payment' value='3'>3</label>
+        <label><input type='radio' name='payment' value='4'>4</label>
+        <label><input type='radio' name='payment' value='5'>5</label>
+        <label><input type='radio' name='payment' value='6'>6</label>
+        <label><input type='radio' name='payment' value='7'>Very well paid</label>
+      </div>
+    </div>
+
+    <div>
+      <p>How much did you enjoy the experiment?</p>
+      <div class='likert-scale'>
+        <label><input type='radio' name='enjoy' value='1'>Not at all</label>
+        <label><input type='radio' name='enjoy' value='2'>2</label>
+        <label><input type='radio' name='enjoy' value='3'>3</label>
+        <label><input type='radio' name='enjoy' value='4'>4</label>
+        <label><input type='radio' name='enjoy' value='5'>5</label>
+        <label><input type='radio' name='enjoy' value='6'>6</label>
+        <label><input type='radio' name='enjoy' value='7'>Very much</label>
+      </div>
+    </div>
+
+    <div>
+      <p>Do you have any other comments about this experiment?</p>
+      <textarea name='comments' cols='30' rows='4'></textarea>
+    </div>
+
+  </div>
+  `,
   on_finish: function(data) {
-    data.category = "demographics";
+    data.category = "demoSurvey";
   }
 };
-timeline.push(demographics);
+
+
+timeline.push(demoSurvey);
 
 
 // FINAL FUNCTION CALL //
