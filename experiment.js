@@ -7,6 +7,8 @@ function shuffleArray(array) {
   return array;
 }
 
+let nameList = [];
+
 // Preliminary Calls //
 const jsPsych = initJsPsych({
   auto_update_progress_bar: false,
@@ -19,9 +21,23 @@ const jsPsych = initJsPsych({
 let timeline = [];
 const characterNumber = 2;
 
+// Helper: extract characters
+function getGameData() {
+  let characters = [];
+  const gameData = jsPsych.data.get().filter({ category: 'gameData' }).values()[0];
+  for (let i = 0; i < characterNumber; i++) {
+    characters.push({
+      name: gameData.names[i],
+      pronouns: gameData.pronouns[i]
+    });
+  }
+  return characters;
+}
+
 // EXPERIMENT CODE //
-const conditions_list = shuffleArray(['MadLibs', 'Standard']);
-const condition = conditions_list[0]; // Random assignment
+// const conditions_list = shuffleArray(['MadLibs', 'Standard']);
+// const condition = conditions_list[0]; // Random assignment
+const condition = 'MadLibs'; // For testing purposes
 console.log("Assigned condition: " + condition);
 
 // IRB Consent
@@ -44,59 +60,50 @@ timeline.push(irb);
 if (condition === `MadLibs`) {
   timeline.push({
     type: jsPsychMadlibs,
-    prompt: `Please enter the names of ${characterNumber} people you know and their pronouns.`,
+    prompt: `In this experiment, we want you to help create the characters you will be reading about. Please enter the names of ${characterNumber} characters and their pronouns.`,
     button_label: 'Continue',
     n_names: characterNumber,
     collect_pronouns: true,
     on_finish: function(data) {
       data.category = "gameData";
       console.log("Collected names and pronouns: ", data);
+      characterData = getGameData();
+      nameList = characterData.map(d => d.name);
+      pronounList = characterData.map(d => d.pronouns);
+
+      pronounsNominative = pronounList.map(p => {
+        if (p === 'they/them') return 'they';
+        if (p === 'she/her') return 'she';
+        if (p === 'he/him') return 'he';
+        return 'they'; // default
+      });
     }
   });
 }
 
 
-// Helper: extract characters
-function getGameData() {
-  let characters = [];
-  const gameData = jsPsych.data.get().filter({ category: 'gameData' }).values()[0];
-  for (let i = 0; i < characterNumber; i++) {
-    characters.push({
-      name: gameData.names[i],
-      pronouns: gameData.pronouns[i]
-    });
-  }
-  return characters;
+
+
+const mazeTrial = {
+  type: jsPsychMaze,
+  prompt: "Select the word that best continues the sentence.",
+  sentence: function() {
+    return `${nameList[0]} loves ${nameList[1]} because ${pronounsNominative[0]} is kind.`
+  },
+  competitors: function() {
+    return `XXXX green fence glowed ${pronounsNominative[1]} to eats`
+  },
+  attention_check: function() {
+    return `${nameList[0]} dislikes ${nameList[1]}.`
+  },
+  attention_check_choices: [true, false],
+  attention_check_correct: false,
+  equality_index: 4,
 }
 
-// Self-Paced Reading Instructions
-const spr_instructions = {
-  type: jsPsychHtmlButtonResponse,
-  stimulus: `
-    <div style="max-width: 800px; margin: 0 auto; text-align: left;">
-      <h2 style="text-align: center;">Self-Paced Reading Instructions</h2>
-      <p>In the next part of the experiment, you will read several short passages one word at a time...</p>
-      <p>Press the button below when you are ready to begin.</p>
-    </div>
-  `,
-  choices: ['Begin'],
-  on_finish: function(data) {
-    data.category = "instructions";
-    // Generate SPR trials only now, after names exist
-    if (condition === "MadLibs") {
-      const sprTrials = generateSelfPacedReadingTrials({ array: getGameData() });
-      jsPsych.addNodeToCurrentLocation({ timeline: sprTrials });
-    }
-
-  }
-};
-timeline.push(spr_instructions);
+timeline.push(mazeTrial);
 
 
-if (condition === 'Standard') {
-  const sprTrialsStandard = generateSelfPacedReadingTrials()
-  timeline.push(...sprTrialsStandard);
-}
 
 // Demographics 
 
