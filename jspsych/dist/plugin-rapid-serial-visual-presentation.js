@@ -5,8 +5,8 @@ var jsPsychRsvp = (function (jspsych) {
         name: "rsvp",
         parameters: {
             sentence: { type: jspsych.ParameterType.STRING, default: 'Read this sentence one word at a time.'},
-            word_duration: { type: jspsych.ParameterType.INT, default: 100 },
-            fixation_duration: { type: jspsych.ParameterType.INT, default: 500 },
+            word_duration: { type: jspsych.ParameterType.INT, default: 150 },
+            fixation_duration: { type: jspsych.ParameterType.INT, default: 1000 },
             prompt: { type: jspsych.ParameterType.STRING, default: 'On the next screen, you will see a \'+\' in the center of the screen. Focus on the \'+\' until the sentence appears, one word at a time. After the sentence, you will be asked to fill in a blank in the sentence.'},
             start_key: { type: jspsych.ParameterType.STRING, default: 'Space' },
             blank_location: { type: jspsych.ParameterType.INT, default: 3 }
@@ -61,10 +61,9 @@ var jsPsychRsvp = (function (jspsych) {
             
             const showBlankedQuestion = () => {
                 display_element.innerHTML = `<div style="max-width: 800px; margin: 0 auto; text-align: left;">
-                    <p>What word best completes the sentence?</p>
+                    <p>What word completes the sentence? Press 'Enter' to submit your answer. </p>
                     <p><strong>${words_with_blank.join(" ")}</strong></p>
                     <input type="text" id="rsvp-response" style="width: 100%; font-size: 24px;" autofocus>
-                    <button id="rsvp-submit" style="font-size: 24px; margin-top: 10px;">Submit</button>
                 </div>`;
 
                 const start_time = performance.now();
@@ -73,11 +72,15 @@ var jsPsychRsvp = (function (jspsych) {
                 inputAF.focus();
                 inputAF.select();
 
-                document.getElementById('rsvp-submit').addEventListener('click', () => {
-                    const response = inputAF.value;
-                    const rt = Math.round(performance.now() - start_time);
-                    endTrial(response, rt);
-                });
+                const subtmitListener = (e) => {
+                    if (e.key === 'Enter') {
+                        document.removeEventListener('keydown', subtmitListener);
+                        const response = inputAF.value;
+                        const rt = Math.round(performance.now() - start_time);
+                        endTrial(response, rt);
+                    }
+                };
+                document.addEventListener('keydown', subtmitListener);
             };
 
             const endTrial = (response, rt) => {

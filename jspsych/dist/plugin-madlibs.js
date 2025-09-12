@@ -28,7 +28,7 @@ var jsPsychMadlibs = (function(jspsych) {
         type: jspsych.ParameterType.STRING,
         array: true,
         default: null,
-        description: 'Optional array of allowable names for the datalist. If null, free input is allowed.'
+        description: 'Optional array of disallowed names.'
       }
     }
   };
@@ -73,6 +73,10 @@ var jsPsychMadlibs = (function(jspsych) {
           flex: 1;
           min-width: 120px;
         }
+        .name-row input.invalid {
+          border-color: red;
+          background-color: #ffe6e6;
+        }
         .submit-btn {
           background-color: #1DA1F2;
           color: white;
@@ -88,16 +92,6 @@ var jsPsychMadlibs = (function(jspsych) {
           cursor: not-allowed;
         }
       `;
-
-      // Construct datalist if name_list is provided
-      let datalistHTML = '';
-      if (trial.name_list && Array.isArray(trial.name_list)) {
-        datalistHTML += `<datalist id="namelist">`;
-        trial.name_list.forEach(n => {
-          datalistHTML += `<option value="${n}"></option>`;
-        });
-        datalistHTML += `</datalist>`;
-      }
 
       // Generate rows dynamically
       let formFields = '';
@@ -125,7 +119,6 @@ var jsPsychMadlibs = (function(jspsych) {
           <h3>${trial.prompt}</h3>
           <form id="madlibs-form">
             ${formFields}
-            ${datalistHTML}
             <button type="submit" class="submit-btn">${trial.button_label}</button>
           </form>
         </div>
@@ -139,18 +132,32 @@ var jsPsychMadlibs = (function(jspsych) {
         e.preventDefault();
         const formData = new FormData(form);
         const responses = [];
+        const disallowedNames = [];
+        var canProceed = true;
+
+        form.querySelectorAll('input').forEach(input => input.classList.remove('invalid'));
 
         for (let i = 0; i < trial.n_names; i++) {
+          const input = form.querySelector(`input[name="name${i}"]`);
           const name = formData.get(`name${i}`).trim();
           if (!name) return; // fail early
+          if (trial.name_list && trial.name_list.includes(name)) {
+            input.classList.add('invalid');
+            disallowedNames.push(name);
+            canProceed = false;
+          }
 
           let pronoun = null;
           if (trial.collect_pronouns) {
             pronoun = formData.get(`pronoun${i}`);
             if (!pronoun) return;
           }
-
           responses.push(trial.collect_pronouns ? { name, pronoun } : { name });
+        }
+
+        if (!canProceed) {
+          alert(`The name(s) "${disallowedNames.join(", ")}" is/are not allowed. Please choose (a) different name(s).`);
+          return;
         }
 
         display_element.innerHTML = '';
