@@ -177,17 +177,19 @@ var jsPsychMaze = (function(jspsych) {
                             // show_step();
                         }, 500);
                     } else {
-                        end_trial(false);
+                        document.removeEventListener('keydown', key_listener);
+                        end_trial(false, false);
                     }
                 }
             };
 
-            const end_trial = (show_attention_check = true) => {
+            const end_trial = (show_attention_check = true, completed_successfully = true) => {
                 const trial_result = {
                     response: JSON.stringify(trial_data),
                     rt: performance.now() - global_time,
                     stimulus: trial.sentence,
                     competitors: trial.competitors,
+                    completed_trial_successfully: completed_successfully
                 };
             
                 if (trial.attention_check && show_attention_check) {

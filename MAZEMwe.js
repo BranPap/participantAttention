@@ -60,7 +60,18 @@ const mazeTrial2 = {
     allow_redo: false,
   }
   
-  timeline.push(mazeTrial2);
+timeline.push(mazeTrial2);
+
+const mazeTrial3 = {
+  type: jsPsychMaze,
+  prompt: "Select the word that best continues the sentence.",
+  sentence: `Bran and Haley are building an experiment.`,
+  competitors: `x-x-x but balks was constructing be determined.`,
+  allow_redo: true,
+  equality_index: 4
+}
+
+timeline.push(mazeTrial3);
 
 
 // DEBRIEF //
