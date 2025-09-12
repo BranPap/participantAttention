@@ -4,16 +4,17 @@ var jsPsychMaze = (function(jspsych) {
     const info = {
         name: 'maze',
         parameters: {
-            prompt: { type: jspsych.ParameterType.STRING, default: 'Select the word that best continues the sentence:' },
-            sentence: { type: jspsych.ParameterType.STRING, default: 'Welcome to the maze.' },
-            competitors: { type: jspsych.ParameterType.STRING, default: 'XXXX XXXX XXXX XXXX' },
-            attention_check: { type: jspsych.ParameterType.STRING, default: null },
-            attention_check_choices: { type: jspsych.ParameterType.ARRAY, default: [true, false] },
-            attention_check_correct: { type: jspsych.ParameterType.BOOL, default: true },
-            keys_to_press: { type: jspsych.ParameterType.ARRAY, default: ['F', 'J'] },
-            start_key: { type: jspsych.ParameterType.STRING, default: 'Space' },
-            font_size: { type: jspsych.ParameterType.INT, default: 24 },
-            equality_index: { type: jspsych.ParameterType.INT, default: null },
+            prompt: { type: jspsych.ParameterType.STRING, default: 'Select the word that best continues the sentence:' }, // Prompt to display above stimulus
+            sentence: { type: jspsych.ParameterType.STRING, default: 'Welcome to the maze.' }, // Sentence to present in maze format; will be tokenized into words at white space
+            competitors: { type: jspsych.ParameterType.STRING, default: 'XXXX XXXX XXXX XXXX' }, // Competitor words, separated by spaces; must have same number of words as sentence
+            attention_check: { type: jspsych.ParameterType.STRING, default: null }, // Whether or not to include an attention check question at the end of the trial
+            attention_check_choices: { type: jspsych.ParameterType.ARRAY, default: null }, // Choices for attention check question answers
+            attention_check_correct_choice: { type: jspsych.ParameterType.BOOL, default: null }, // Correct answer for attention check question
+            keys_to_press: { type: jspsych.ParameterType.ARRAY, default: ['F', 'J'] }, // Keys to press for left and right choices, respectively. By default, 'F' for left and 'J' for right
+            start_key: { type: jspsych.ParameterType.STRING, default: 'Space' }, // Key to press to start the trial, 'Space' by default
+            font_size: { type: jspsych.ParameterType.INT, default: 24 }, // Font size for stimulus words
+            equality_index: { type: jspsych.ParameterType.INT, default: null }, // If specified, the index of the word (0-indexed) at which point both choices are equally acceptable; if the participant selects either word, they will advance to the next step without any feedback. Good for handling cases when you want to test sentences with multiple valid continuations.
+            allow_redo: { type: jspsych.ParameterType.BOOL, default: true } // If true, participants can try again after an incorrect response; if false, the trial ends immediately after an incorrect response. If true, the border of the choice container will briefly flash red to indicate an incorrect response.
         }
     };
 
@@ -81,6 +82,7 @@ var jsPsychMaze = (function(jspsych) {
 
             const sentence = trial.sentence.trim().split(' ');
             const competitors = trial.competitors.trim().split(' ');
+            const global_time = performance.now();
             let current_step = 0;
             let trial_data = [];
 
@@ -91,7 +93,7 @@ var jsPsychMaze = (function(jspsych) {
             const show_start_screen = () => {
                 display_element.innerHTML = customStyles + `
                     <div class="container">
-                        <div class="headline">Maze Task</div>
+                        <div class="headline">Ready?</div>
                         <div class="instruction-text">
                             Press <strong>${trial.start_key.toUpperCase()}</strong> to begin the task
                         </div>
@@ -158,25 +160,37 @@ var jsPsychMaze = (function(jspsych) {
                         rt
                     });
 
-                    document.removeEventListener('keydown', key_listener);
+                    
 
                     const word_container = display_element.querySelector('.maze-words');
 
                     if (is_correct || trial.equality_index !== null && current_step === trial.equality_index) {
                         current_step++;
+                        document.removeEventListener('keydown', key_listener);
                         show_step();
-                    } else {
+                    } else if (trial.allow_redo) {
                         word_container.style.border = '2px solid red';
+                        document.removeEventListener('keydown', key_listener);
                         setTimeout(() => {
                             word_container.style.border = 'none';
-                            show_step();
+                            document.addEventListener('keydown', key_listener);
+                            // show_step();
                         }, 500);
+                    } else {
+                        end_trial(false);
                     }
                 }
             };
 
-            const end_trial = () => {
-                if (trial.attention_check) {
+            const end_trial = (show_attention_check = true) => {
+                const trial_result = {
+                    response: JSON.stringify(trial_data),
+                    rt: performance.now() - global_time,
+                    stimulus: trial.sentence,
+                    competitors: trial.competitors,
+                };
+            
+                if (trial.attention_check && show_attention_check) {
                     display_element.innerHTML = customStyles + `
                         <div class="container">
                             <div class="headline">Attention Check</div>
@@ -190,17 +204,19 @@ var jsPsychMaze = (function(jspsych) {
                     buttons.forEach(btn => {
                         btn.addEventListener('click', (e) => {
                             const choice = e.target.dataset.choice === 'true';
-                            trial_data.push({
-                                attention_check_response: choice,
-                                attention_check_correct: choice === trial.attention_check_correct
-                            });
-                            this.jsPsych.finishTrial(trial_data);
+                            trial_result.attention_check = trial.attention_check;
+                            trial_result.attention_check_choices = trial.attention_check_choices;
+                            trial_result.attention_check_correct_choice = trial.attention_check_correct_choice; 
+                            trial_result.attention_check_response = choice;
+                            trial_result.attention_check_is_correct = choice === trial.attention_check_correct_choice;
+                            this.jsPsych.finishTrial(trial_result);
                         });
                     });
                 } else {
-                    this.jsPsych.finishTrial(trial_data);
+                    this.jsPsych.finishTrial(trial_result);
                 }
             };
+            
 
             show_start_screen();
         }
