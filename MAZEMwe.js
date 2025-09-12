@@ -24,6 +24,9 @@ const welcome = {
   };
   timeline.push(welcome);
 
+
+
+
 // MAZE INSTRUCTIONS //
 const maze_instructions = {
     type: jsPsychHtmlButtonResponse,
@@ -37,7 +40,7 @@ const maze_instructions = {
       data.category = "maze_instructions";
     }
   };
-  timeline.push(maze_instructions);
+  // timeline.push(maze_instructions);
 
 const mazeTrial = {
     type: jsPsychMaze,
