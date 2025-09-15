@@ -1,0 +1,194 @@
+[
+    {
+        "ID": "fill_01",
+        "word_count": "6",
+        "type": "garden_path",
+        "Sentence": "While Kara bathed the baby cried.",
+        "Fill-in-the-blank": "While Kara bathed the baby [blank].",
+        "pos_of_blank": "end"
+    },
+    {
+        "ID": "fill_02",
+        "word_count": "7",
+        "type": "garden_path",
+        "Sentence": "While Ricardo hunted the deer ran away.",
+        "Fill-in-the-blank": "While Ricardo hunted the [blank] ran away.",
+        "pos_of_blank": "end"
+    },
+    {
+        "ID": "fill_03",
+        "word_count": "10",
+        "type": "garden_path",
+        "Sentence": "While the student read the notes blew off the desk.",
+        "Fill-in-the-blank": "While the student read the notes blew off the [blank].",
+        "pos_of_blank": "end"
+    },
+    {
+        "ID": "fill_04",
+        "word_count": "9",
+        "type": "garden_path",
+        "Sentence": "While Alec orders the fish cooks in a pot.",
+        "Fill-in-the-blank": "While Alec orders the [blank] cooks in a pot.",
+        "pos_of_blank": "mid"
+    },
+    {
+        "ID": "fill_05",
+        "word_count": "10",
+        "type": "garden_path",
+        "Sentence": "While Jorge drove the dusty car veered into a ditch.",
+        "Fill-in-the-blank": "While Jorge drove the [blank] car veered into a ditch.",
+        "pos_of_blank": "mid"
+    },
+    {
+        "ID": "fill_06",
+        "word_count": "11",
+        "type": "garden_path",
+        "Sentence": "While the mother calms down the children sit on the bed.",
+        "Fill-in-the-blank": "While the [blank] calms down the children sit on the bed.",
+        "pos_of_blank": "beg"
+    },
+    {
+        "ID": "fill_07",
+        "word_count": "11",
+        "type": "vp_ellip",
+        "Sentence": "The neighbor goes out with friends, and his sister does too.",
+        "Fill-in-the-blank": "The neighbor goes out with friends, and his [blank] does too.",
+        "pos_of_blank": "end"
+    },
+    {
+        "ID": "fill_08",
+        "word_count": "10",
+        "type": "vp_ellip",
+        "Sentence": "Vincent works on Tuesdays, and Summer does on Thursdays too.",
+        "Fill-in-the-blank": "Vincent works on [blank], and Summer does on Thursdays too.",
+        "pos_of_blank": "mid"
+    },
+    {
+        "ID": "fill_09",
+        "word_count": "10",
+        "type": "vp_ellip",
+        "Sentence": "Grant vacuums weekly, and Joel usually does so every month.",
+        "Fill-in-the-blank": "Grant vacuums weekly, and Joel usually does so every [blank].",
+        "pos_of_blank": "end"
+    },
+    {
+        "ID": "fill_10",
+        "word_count": "11",
+        "type": "vp_ellip",
+        "Sentence": "The girl bought two stuffed animals, and the boy did too.",
+        "Fill-in-the-blank": "The girl bought [blank] stuffed animals, and the boy did too.",
+        "pos_of_blank": "mid"
+    },
+    {
+        "ID": "fill_11",
+        "word_count": "13",
+        "type": "vp_ellip",
+        "Sentence": "The rumor about Eduardo spread quickly, and the one about Summer did too.",
+        "Fill-in-the-blank": "The [blank] about Eduardo spread quickly, and the one about Summer did too.",
+        "pos_of_blank": "beg"
+    },
+    {
+        "ID": "fill_12",
+        "word_count": "15",
+        "type": "vp_ellip",
+        "Sentence": "The scandal about the actor was leaked, and the one about the influencer was too.",
+        "Fill-in-the-blank": "The scandal about the actor was, and the one about the [blank] was too.",
+        "pos_of_blank": "end"
+    },
+    {
+        "ID": "fill_13",
+        "word_count": "10",
+        "type": "center_embedding",
+        "Sentence": "The greeting cards the kids made were covered in glitter.",
+        "Fill-in-the-blank": "The [blank] cards the kids made were covered in glitter.",
+        "pos_of_blank": "beg"
+    },
+    {
+        "ID": "fill_14",
+        "word_count": "9",
+        "type": "center_embedding",
+        "Sentence": "The rusty pipes the plumber tried to repair burst.",
+        "Fill-in-the-blank": "The [blank] pipes the plumber tried to repair burst.",
+        "pos_of_blank": "beg"
+    },
+    {
+        "ID": "fill_15",
+        "word_count": "8",
+        "type": "center_embedding",
+        "Sentence": "The squirrel the coyote chased found an acorn.",
+        "Fill-in-the-blank": "The squirrel the [blank] chased found an acorn.",
+        "pos_of_blank": "mid"
+    },
+    {
+        "ID": "fill_16",
+        "word_count": "10",
+        "type": "center_embedding",
+        "Sentence": "The assistant Oscar trained forgot the list of coffee orders. ",
+        "Fill-in-the-blank": "The assistant Oscar trained [blank] the list of coffee orders. ",
+        "pos_of_blank": "mid"
+    },
+    {
+        "ID": "fill_17",
+        "word_count": "9",
+        "type": "center_embedding",
+        "Sentence": "The message Nancy sent to her mom wasn't delivered.",
+        "Fill-in-the-blank": "The [blank] Nancy sent to her mom wasn't delivered.",
+        "pos_of_blank": "beg"
+    },
+    {
+        "ID": "fill_18",
+        "word_count": "13",
+        "type": "center_embedding",
+        "Sentence": "The laptop the officer pulled out of the bag had a green cover.",
+        "Fill-in-the-blank": "The laptop the officer pulled out of the bag had a [blank] cover.",
+        "pos_of_blank": "end"
+    },
+    {
+        "ID": "fill_19",
+        "word_count": "10",
+        "type": "temporal_words",
+        "Sentence": "Tomorrow afternoon, the soccer team will visit the history museum.",
+        "Fill-in-the-blank": "Tomorrow [blank], the soccer team will visit the history museum.",
+        "pos_of_blank": "beg"
+    },
+    {
+        "ID": "fill_20",
+        "word_count": "11",
+        "type": "temporal_words",
+        "Sentence": "Next month, the players will have two weeks of dress rehearsals.",
+        "Fill-in-the-blank": "Next month, the players will have [blank] weeks of dress rehearsals.",
+        "pos_of_blank": "mid"
+    },
+    {
+        "ID": "fill_21",
+        "word_count": "10",
+        "type": "temporal_words",
+        "Sentence": "After next Friday, Adriana will prepare for the poetry contest.",
+        "Fill-in-the-blank": "After next Friday, Adriana will prepare for the [blank] contest.",
+        "pos_of_blank": "end"
+    },
+    {
+        "ID": "fill_22",
+        "word_count": "10",
+        "type": "temporal_words",
+        "Sentence": "Before today, Francisco had never considered running this red light.",
+        "Fill-in-the-blank": "Before [blank], Francisco had never considered running this red light.",
+        "pos_of_blank": "beg"
+    },
+    {
+        "ID": "fill_23",
+        "word_count": "11",
+        "type": "temporal_words",
+        "Sentence": "After the weekend is over, Marisa can finally ride her motorcycle.",
+        "Fill-in-the-blank": "After the weekend is over, Marisa can finally ride her [blank].",
+        "pos_of_blank": "end"
+    },
+    {
+        "ID": "fill_24",
+        "word_count": "14",
+        "type": "temporal_words",
+        "Sentence": "Last month, people argued where to build the new post office in the town.",
+        "Fill-in-the-blank": "Last [blank], people argued where to build the new post office in the town.",
+        "pos_of_blank": "beg"
+    }
+]

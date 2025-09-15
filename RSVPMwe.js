@@ -1,3 +1,7 @@
+let stims = generateStimuli();
+console.log(stims);
+
+
 // Preliminary Calls //
 const jsPsych = initJsPsych({
     auto_update_progress_bar: false,
@@ -8,7 +12,7 @@ const jsPsych = initJsPsych({
   
 let timeline = [];
 let nameList = [];
-const characterNumber = 2;
+const characterNumber = 12;
 
 // Helper: extract characters
 function getGameData() {
@@ -64,26 +68,41 @@ timeline.push({
     }
 });
 
-// RSVP TRIALS //
-const rsvp_trial = {
-    type: jsPsychRsvp,
-    prompt: "Read the following sentence one word at a time. After the sentence, fill in the blank with the word that best completes the sentence.",
-    sentence: "The quick brown fox jumps over the lazy dog",
-    blank_location: 4, // zero-indexed position of the word to be blanked
-  };
 
-timeline.push(rsvp_trial);
 
-const rsvp_trial2 = {
-    type: jsPsychRsvp,
-    prompt: "Read the following sentence one word at a time. After the sentence, fill in the blank with the word that best completes the sentence.",
-    sentence: function() {
-        return `I don't think I've ever seen ${nameList[0]} eat a whole pizza alone!`;
-    },
-    blank_location: 6, // zero-indexed position of the word to be blanked
-  };
+// STIMULI PRESENTATION //
+shuffleArray(nameList);
+console.log(nameList);
 
-timeline.push(rsvp_trial2);
+var criticalTrials = {
+    timeline: [
+      {
+        type: jsPsychRsvp,
+        prompt: "Read the following sentence one word at a time. After the sentence, fill in the blank with the word that completes the sentence.",
+        sentence: function() {
+          if (jsPsych.timelineVariable('nameType') === 'weName') {
+            return jsPsych.timelineVariable('sentence_wename')
+          } else if (jsPsych.timelineVariable('nameType') === 'youName') {
+            var name = nameList.pop();
+            return jsPsych.timelineVariable('sentence_youname').replace('[name]', name);
+          } else if (jsPsych.timelineVariable('nameType') === 'filler') {
+            return jsPsych.timelineVariable('Sentence')
+          }
+        },
+        blank_location: 4,
+        on_finish: function(data) {
+            data.stimID = jsPsych.timelineVariable('ID');
+            data.word_count = jsPsych.timelineVariable('word_count');
+            data.stimType = jsPsych.timelineVariable('type');
+            data.nameType = jsPsych.timelineVariable('nameType');
+        }
+      }
+    ],
+    timeline_variables: stims,
+    randomize_order: true
+}
+
+timeline.push(criticalTrials);
 
 // DEBRIEF //
 const debrief = {

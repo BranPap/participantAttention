@@ -1,0 +1,25 @@
+ID,word_count,fill_type,Sentence,Fill-in-the-blank,pos_of_blank
+fill_01,6,garden_path,While Kara bathed the baby cried.,While Kara bathed the baby [blank].,end
+fill_02,7,garden_path,While Ricardo hunted the deer ran away.,While Ricardo hunted the [blank] ran away.,end
+fill_03,10,garden_path,While the student read the notes blew off the desk.,While the student read the notes blew off the [blank].,end
+fill_04,9,garden_path,While Alec orders the fish cooks in a pot.,While Alec orders the [blank] cooks in a pot.,mid
+fill_05,10,garden_path,While Jorge drove the dusty car veered into a ditch.,While Jorge drove the [blank] car veered into a ditch.,mid
+fill_06,11,garden_path,While the mother calms down the children sit on the bed.,While the [blank] calms down the children sit on the bed.,beg
+fill_07,11,vp_ellip,"The neighbor goes out with friends, and his sister does too.","The neighbor goes out with friends, and his [blank] does too.",end
+fill_08,10,vp_ellip,"Vincent works on Tuesdays, and Summer does on Thursdays too.","Vincent works on [blank], and Summer does on Thursdays too.",mid
+fill_09,10,vp_ellip,"Grant vacuums weekly, and Joel usually does so every month.","Grant vacuums weekly, and Joel usually does so every [blank].",end
+fill_10,11,vp_ellip,"The girl bought two stuffed animals, and the boy did too.","The girl bought [blank] stuffed animals, and the boy did too.",mid
+fill_11,13,vp_ellip,"The rumor about Eduardo spread quickly, and the one about Summer did too.","The [blank] about Eduardo spread quickly, and the one about Summer did too.",beg
+fill_12,15,vp_ellip,"The scandal about the actor was leaked, and the one about the influencer was too.","The scandal about the actor was, and the one about the [blank] was too.",end
+fill_13,10,center_embedding,The greeting cards the kids made were covered in glitter.,The [blank] cards the kids made were covered in glitter.,beg
+fill_14,9,center_embedding,The rusty pipes the plumber tried to repair burst.,The [blank] pipes the plumber tried to repair burst.,beg
+fill_15,8,center_embedding,The squirrel the coyote chased found an acorn.,The squirrel the [blank] chased found an acorn.,mid
+fill_16,10,center_embedding,The assistant Oscar trained forgot the list of coffee orders. ,The assistant Oscar trained [blank] the list of coffee orders. ,mid
+fill_17,9,center_embedding,The message Nancy sent to her mom wasn't delivered.,The [blank] Nancy sent to her mom wasn't delivered.,beg
+fill_18,13,center_embedding,The laptop the officer pulled out of the bag had a green cover.,The laptop the officer pulled out of the bag had a [blank] cover.,end
+fill_19,10,temporal_words,"Tomorrow afternoon, the soccer team will visit the history museum.","Tomorrow [blank], the soccer team will visit the history museum.",beg
+fill_20,11,temporal_words,"Next month, the players will have two weeks of dress rehearsals.","Next month, the players will have [blank] weeks of dress rehearsals.",mid
+fill_21,10,temporal_words,"After next Friday, Adriana will prepare for the poetry contest.","After next Friday, Adriana will prepare for the [blank] contest.",end
+fill_22,10,temporal_words,"Before today, Francisco had never considered running this red light.","Before [blank], Francisco had never considered running this red light.",beg
+fill_23,11,temporal_words,"After the weekend is over, Marisa can finally ride her motorcycle.","After the weekend is over, Marisa can finally ride her [blank].",end
+fill_24,14,temporal_words,"Last month, people argued where to build the new post office in the town.","Last [blank], people argued where to build the new post office in the town.",beg

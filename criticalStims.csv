@@ -1,0 +1,25 @@
+ID,word_count,type,Name1,sentence_wename,sentence_youname
+targ_01,9,reverse_bias,Miguel,"Yesterday afternoon, the dog bit Miguel on the leg.","Yesterday afternoon, the dog bit [name] on the leg."
+targ_02,8,reverse_bias,Chase,It was rumored that Chase ruined the food.,It was rumored that [name] ruined the food.
+targ_03,8,reverse_bias,Adrian,"To help with studying, Adrian quizzed the student.","To help with studying, [name] quizzed the student."
+targ_04,9,reverse_bias,Seth,It was Seth who pursued the thief this morning.,It was [name] who pursued the thief this morning.
+targ_05,9,reverse_bias,Cassidy,"Feeling bad, Cassidy fed the tabby cat some food.","Feeling bad, [name] fed the tabby cat some food."
+targ_06,10,reverse_bias,Karina,"Earlier today, Karina treated the tall patient at the hospital.","Earlier today, [name] treated the tall patient at the hospital."
+targ_07,11,reverse_bias,Bethany,Everyone knew Bethany hit the red ball that broke the window.,Everyone knew [name] hit the red ball that broke the window.
+targ_08,8,reverse_bias,Dominique,No one was surprised Dominique caught the fish.,No one was surprised [name] caught the fish.
+targ_09,9,nonreverse,Brett,"To meet the deadline, Brett reviewed the paper quickly.","To meet the deadline, [name] reviewed the paper quickly."
+targ_10,8,nonreverse,Shane,It was wild Shane won the race yesterday.,It was wild [name] won the race yesterday.
+targ_11,9,nonreverse,Jake,Everyone laughed when Jake told the joke at recess.,Everyone laughed when [name] told the joke at recess.
+targ_12,9,nonreverse,Alejandro,People are going to dance whenever Alejandro plays music.,People are going to dance whenever [name] plays music.
+targ_13,9,nonreverse,Carly,It was revealed that Carly typed the mysterious letter.,It was revealed that [name] typed the mysterious letter.
+targ_14,9,nonreverse,Bianca,"This morning, Bianca flew the plane in an emergency.","This morning, [name] flew the plane in an emergency."
+targ_15,8,nonreverse,Desiree,"To hide the gold, Desiree buried the treasure.","To hide the gold, [name] buried the treasure."
+targ_16,8,nonreverse,Kendra,"Coming home last night, Kendra pulled the wagon.","Coming home last night, [name] pulled the wagon."
+targ_17,10,symm,Brenda,"Last week, Brenda kissed her boyfriend for the first time.","Last week, [name] kissed her boyfriend for the first time."
+targ_18,10,symm,Gabriela,"Reluctantly, Gabriela hugged her brother even though she was mad.","Reluctantly, [name] hugged her brother even though she was mad."
+targ_19,11,symm,Casey,"Even though it was dark, Casey saw the driver last night.","Even though it was dark, [name] saw the driver last night."
+targ_20,9,symm,Daisy,No one knew Daisy loved the puppy so much.,No one knew [name] loved the puppy so much.
+targ_21,8,symm,Angel,It was no secret Angel despised the baker.,It was no secret [name] despised the baker.
+targ_22,10,symm,Colton,It was nice of Colton to thank the mean customer.,It was nice of [name] to thank the mean customer.
+targ_23,12,symm,Spencer,"To win the game, Spencer chose the player with the blue tee.","To win the game, [name] chose the player with the blue tee."
+targ_24,8,symm,Devon,"Wanting good photos, Devon met the photographer in-person.","Wanting good photos, [name] met the photographer in-person."
