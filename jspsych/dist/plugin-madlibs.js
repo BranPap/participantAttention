@@ -39,59 +39,99 @@ var jsPsychMadlibs = (function(jspsych) {
     }
 
     trial(display_element, trial) {
+      const exclusionPanel = trial.name_list && Array.isArray(trial.name_list) && trial.name_list.length > 0
+      ? `
+        <div class="exclusion-panel">
+          <h4>Names already included:</h4>
+          <ul>
+            ${trial.name_list.map(n => `<li>${n}</li>`).join('')}
+          </ul>
+        </div>
+      `
+      : '';
+
       const css = `
-        .madlibs-container {
-          max-width: 700px;
-          margin: 40px auto;
-          padding: 20px;
-          font-family: sans-serif;
-          background: #f9f9f9;
-          border-radius: 10px;
-          box-shadow: 0 0 10px rgba(0,0,0,0.1);
-        }
-        .madlibs-container h3 {
-          margin-bottom: 20px;
-        }
-        .name-row {
-          display: flex;
-          gap: 10px;
-          align-items: center;
-          margin-bottom: 15px;
-          flex-wrap: wrap;
-        }
-        .name-row input, .name-row select {
-          padding: 8px 12px;
-          font-size: 16px;
-          border: 1px solid #ccc;
-          border-radius: 6px;
-        }
-        .name-row input {
-          flex: 1.2;
-          min-width: 140px;
-        }
-        .name-row select {
-          flex: 1;
-          min-width: 120px;
-        }
-        .name-row input.invalid {
-          border-color: red;
-          background-color: #ffe6e6;
-        }
-        .submit-btn {
-          background-color: #1DA1F2;
-          color: white;
-          border: none;
-          border-radius: 20px;
-          padding: 10px 20px;
-          font-size: 16px;
-          font-weight: bold;
-          cursor: pointer;
-        }
-        .submit-btn:disabled {
-          background-color: #9bd1f9;
-          cursor: not-allowed;
-        }
-      `;
+  .madlibs-layout {
+    display: flex;
+    gap: 30px;
+    max-width: 900px;
+    margin: 40px auto;
+    font-family: sans-serif;
+  }
+  .exclusion-panel {
+    flex: 0 0 200px;
+    background: #fff3f3;
+    border: 1px solid #e0b4b4;
+    border-radius: 8px;
+    padding: 15px;
+    font-size: 14px;
+    color: #a33;
+    height: fit-content;
+    text-align: left;
+  }
+  .exclusion-panel h4 {
+    margin-top: 0;
+    font-size: 16px;
+    margin-bottom: 10px;
+  }
+  .exclusion-panel ul {
+    padding-left: 18px;
+    margin: 0;
+  }
+  .exclusion-panel li {
+    list-style: disc;
+    margin-bottom: 5px;
+  }
+  .madlibs-container {
+    flex: 1;
+    background: #f9f9f9;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  }
+  .madlibs-container h3 {
+    margin-bottom: 20px;
+  }
+  .name-row {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    margin-bottom: 15px;
+    flex-wrap: wrap;
+  }
+  .name-row input, .name-row select {
+    padding: 8px 12px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+  }
+  .name-row input {
+    flex: 1.2;
+    min-width: 140px;
+  }
+  .name-row select {
+    flex: 1;
+    min-width: 120px;
+  }
+  .name-row input.invalid {
+    border-color: red;
+    background-color: #ffe6e6;
+  }
+  .submit-btn {
+    background-color: #1DA1F2;
+    color: white;
+    border: none;
+    border-radius: 20px;
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+  }
+  .submit-btn:disabled {
+    background-color: #9bd1f9;
+    cursor: not-allowed;
+  }
+`;
 
       // Generate rows dynamically
       let formFields = '';
@@ -114,7 +154,9 @@ var jsPsychMadlibs = (function(jspsych) {
       }
 
       const html = `
-        <style>${css}</style>
+      <style>${css}</style>
+      <div class="madlibs-layout">
+        ${exclusionPanel}
         <div class="madlibs-container">
           <h3>${trial.prompt}</h3>
           <form id="madlibs-form">
@@ -122,7 +164,8 @@ var jsPsychMadlibs = (function(jspsych) {
             <button type="submit" class="submit-btn">${trial.button_label}</button>
           </form>
         </div>
-      `;
+      </div>
+    `;
 
       display_element.innerHTML = html;
 
@@ -132,6 +175,7 @@ var jsPsychMadlibs = (function(jspsych) {
         e.preventDefault();
         const formData = new FormData(form);
         const responses = [];
+        const namesSubmitted = [];
         const disallowedNames = [];
         var canProceed = true;
 
@@ -141,6 +185,11 @@ var jsPsychMadlibs = (function(jspsych) {
           const input = form.querySelector(`input[name="name${i}"]`);
           const name = formData.get(`name${i}`).trim();
           if (!name) return; // fail early
+          if (namesSubmitted.includes(name.toLowerCase().replace(/\b\w/g, c => c.toUpperCase()))) {
+            input.classList.add('invalid');
+            alert(`The name "${name}" has been entered more than once. Please enter a different name.`);
+            return;
+          }; 
           if (trial.name_list && trial.name_list.includes(name)) {
             input.classList.add('invalid');
             disallowedNames.push(name);
@@ -152,6 +201,7 @@ var jsPsychMadlibs = (function(jspsych) {
             pronoun = formData.get(`pronoun${i}`);
             if (!pronoun) return;
           }
+          namesSubmitted.push(name.toLowerCase().replace(/\b\w/g, c => c.toUpperCase()));
           responses.push(trial.collect_pronouns ? { name, pronoun } : { name });
         }
 
