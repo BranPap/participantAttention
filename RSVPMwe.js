@@ -10,7 +10,9 @@ const jsPsych = initJsPsych({
     },
     on_finish: function(data) {
       // jsPsych.data.displayData('csv');
+      proliferate.submit({ trials: data.values() });
       console.log("Experiment finished");
+
     }
   });
   
