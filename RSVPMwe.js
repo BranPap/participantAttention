@@ -137,6 +137,33 @@ var rsvpInstructions = {
 
 timeline.push(rsvpInstructions);
 
+var trainingTrial = {
+    type: jsPsychRsvp,
+    sentence: 'This is a practice sentence to help you get used to the task.',
+    blank_location: 4,
+    prompt: "This is a practice trial. Read the sentence one word at a time as the words appear on the screen. After the sentence, fill in the blank with the word that completes the sentence.",
+    on_finish: function(data) {
+      data.category = "practice";
+    }
+}
+
+timeline.push(trainingTrial);
+
+var rsvpInstructions2 = {
+  type: jsPsychHtmlButtonResponse,
+  stimulus: `<div style="max-width: 1000px; margin: 0 auto; text-align: left;">
+    <h2 style="text-align: center;">End of Practice</h2>
+    <p>You have completed the practice trial. The main experiment will now begin. Remember to read each sentence carefully and fill in the missing word after each sentence.</p>
+    <p>When you are ready, press 'Continue' to start the main experiment.</p>
+  </div>`,
+  choices: ['Continue'],
+  on_finish: function(data) {
+    data.category = "instructions";
+  }
+}
+
+timeline.push(rsvpInstructions2);
+
 var criticalTrials = {
     timeline: [
       {
