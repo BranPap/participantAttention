@@ -35,19 +35,28 @@ function getGameData() {
 
 // EXPERIMENT CODE //
 
-// WELCOME PAGE //
-const welcome = {
-    type: jsPsychHtmlButtonResponse,
-    stimulus: `<div style="max-width: 1000px; margin: 0 auto; text-align: left;">
-      <h2 style="text-align: center;">Welcome!</h2>
-      <p>Press 'Continue' to begin the experiment; this is for demonstration purposes only and while the experiment will collect data, NO PART OF THIS DATA WILL BE USED IN ANY PUBLICATION OR THE LIKE.</p>
-    </div>`,
-    choices: ['Continue'],
-    on_finish: function(data) {
-      data.category = "welcome";
-    }
-  };
-  timeline.push(welcome);
+// IRB FORM //
+
+const irb = {
+  // Which plugin to use
+  type: jsPsychHtmlButtonResponse,
+  // What should be displayed on the screen
+  stimulus: '<div style="max-width: 1000px; margin: 0 auto; text-align: left;"><h2 style="text-align: center;">Consent to Participate</h2><p>By completing this study, you are participating in research being performed by cognitive scientists in the Stanford University Department of Linguistics and the University of Southern California Department of Linguistics. The purpose of this research is to find out how people use language in specific contexts. You must be at least 18 years old to participate. There are neither specific benefits nor anticipated risks associated with participation in this study. Your participation in this study is completely voluntary and you can withdraw at any time by simply exiting the study. You may decline to answer any or all of the questions following the study. Choosing not to participate or withdrawing will result in no penalty. Your anonymity is assured; the researchers who have requested your participation will not receive any personal information about you, and any information you provide will not be shared in association with any personally identifying information.</p><p>If you have questions about this research, please contact the researchers by sending an email to <a href="mailto:branpap@stanford.edu" style="color: blue;">branpap@stanford.edu</a>. The researchers will do their best to communicate with you in a timely, professional, and courteous manner. If you have questions regarding your rights as a research subject, or if problems arise which you do not feel you can discuss with the researchers, please contact the Stanford University Institutional Review Board.</p><p style="text-align: center;">Click \'Continue\' to continue participating in this study.</p></div>',
+  // What should the button(s) say
+  choices: ['Continue'],
+  on_finish: function(data) {
+      data.category = "irb";
+      // jsPsych.setProgressBar((data.trial_index + 1) / (timeline.length + jsPsychStimuli.length))
+  }
+};
+
+timeline.push(irb)
+
+var enter_fullscreen = {
+  type: jsPsychFullscreen,
+  fullscreen_mode: true
+};
+timeline.push(enter_fullscreen);
 
 // MADLIBS //
 
@@ -194,20 +203,37 @@ var criticalTrials = {
 
 timeline.push(criticalTrials);
 
-// DEBRIEF //
-const debrief = {
-    type: jsPsychHtmlButtonResponse,
-    stimulus: `<div style="max-width: 1000px; margin: 0 auto; text-align: left;">
-      <h2 style="text-align: center;">Debrief</h2>
-      <p>Thank you for participating in this demonstration! The purpose of this study was to investigate how people read sentences. If you have any questions about this research, please contact the researchers at branpap[at]stanford[dot]edu.</p>
-      <p style="text-align: center;">Press 'Finish' to complete the experiment. You will be redirected back to google.com.</p>
-    </div>`,
-    choices: ['Finish'],
-    on_finish: function(data) {
-      data.category = "debrief";
-    }
-  };
-  timeline.push(debrief);
+ // QUESTIONNAIRE //
+
+ const demoSurvey = {
+  type: jsPsychSurveyHtmlForm,
+  html: "<style>#survey-container { font-family: 'Arial', sans-serif; line-height: 1.6; background-color: #f9f9f9; color: #333; margin: 0; padding: 20px; } #survey-container div { margin-bottom: 20px; padding: 15px; background: #fff; border-radius: 8px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); } #survey-container p { font-size: 16px; font-weight: bold; margin-bottom: 10px; } #survey-container input[type='radio'] { margin-right: 10px; } #survey-container select, #survey-container input[type='text'], #survey-container textarea { font-size: 14px; padding: 10px; border: 1px solid #ccc; border-radius: 5px; width: 100%; box-sizing: border-box; } #survey-container textarea { resize: vertical; } #survey-container label { display: block; margin-bottom: 5px; font-size: 14px; } #survey-container select { background: #fff; } #survey-container input[type='radio'] + label, #survey-container input[type='radio']:last-of-type { margin-right: 15px; }</style><h2>All following questions are optional</h2><div id='survey-container'><div><p>Did you read the instructions and do you think you did the task correctly?</p><label><input type='radio' name='correct' value='Yes'> Yes</label><label><input type='radio' name='correct' value='No'> No</label><label><input type='radio' name='correct' value='I was confused'> I was confused</label></div><div><p>Gender:</p><select name='gender'><option value='null'> </option><option value='Female'>Female</option><option value='Male'>Male</option><option value='Non-binary/Non-conforming'>Non-binary/Non-conforming</option><option value='Other'>Other</option></select></div><div><p>Age:</p><input type='text' name='age' size='10'></div><div><p>Level of education:</p><select name='education'><option value='null'> </option><option value='Some high school'>Some high school</option><option value='Graduated high school'>Graduated high school</option><option value='Some college'>Some college</option><option value='Graduated college'>Graduated college</option><option value='Hold a higher degree'>Hold a higher degree</option></select></div><div><p>Do you think the payment was fair?</p><select name='payment'><option value='null'> </option><option value='The payment was too low'>The payment was too low</option><option value='The payment was fair'>The payment was fair</option></select></div><div><p>Did you enjoy the experiment?</p><select name='enjoy'><option value='null'> </option><option value='Worse than the average experiment'>Worse than the average experiment</option><option value='An average experiment'>An average experiment</option><option value='Better than the average experiment'>Better than the average experiment</option></select></div><div><p>Do you have any other comments about this experiment?</p><textarea name='comments' cols='30' rows='4'></textarea></div></div>",
+  on_finish: function(data) {
+    data.category = "demoSurvey";
+  }
+}
+
+timeline.push(demoSurvey);
+
+const exit_fullscreen = {
+type: jsPsychFullscreen,
+fullscreen_mode: false,
+delay_after: 0
+}
+
+timeline.push(exit_fullscreen);
+
+// THANKS //
+
+const thanks = {
+  type: jsPsychHtmlButtonResponse,
+  choices: ['Continue'],
+  stimulus: "Thank you for your time! Please click 'Continue' and then wait a moment until you're directed back to Prolific.<br><br>",
+  on_finish: function(data) {
+      data.category = "thanks"
+  }
+}
   
+timeline.push(thanks);
 // Start the experiment
 jsPsych.run(timeline);
