@@ -1,0 +1,167 @@
+---
+title: "R Notebook"
+output: html_notebook
+author: "Brandon Papineau"
+---
+
+This is the pilot analysis from September 17th, 2025. Data collected between 2-5pm. 
+
+```{r}
+library(tidyverse)
+library(stringr)
+library(lme4)
+```
+
+
+```{r}
+allData <- read.csv("participant_attention_pilot-merged.csv")
+
+allDataUnfiltered <- allData %>% 
+  filter(trial_type == 'rsvp')
+
+allDataCoded <- allData %>%
+  mutate(
+    splitSentence = str_split(sentence, " "),
+    blankedWord = map2_chr(splitSentence, blank_location+1, ~ .x[.y]),
+    isCorrect     = ifelse(
+      str_to_lower(str_trim(str_remove_all(response, "[[:punct:]]"))) ==
+      str_to_lower(str_remove_all(blankedWord, "[[:punct:]]")),
+      1, 0
+    ),
+    responseLength = nchar(response),
+    blankLength = nchar(str_trim(blankedWord))
+  ) %>%
+  filter(trial_type == "rsvp") 
+
+workeridVals <- allDataCoded %>% 
+  group_by(workerid) %>% 
+  filter(nameType != "") %>% 
+  summarize(meanRt = mean(rt),
+            meanAcc = mean(isCorrect)) 
+
+allDataCoded <- allDataCoded %>%
+  group_by(responseLength, stimType) %>%
+  mutate(
+    meanRt = mean(rt, na.rm = TRUE),
+    sdRt   = sd(rt, na.rm = TRUE)
+  ) %>%
+  ungroup() %>%
+  filter(rt >= meanRt - 2*sdRt, rt <= meanRt + 2*sdRt) %>% 
+  left_join(workeridVals, by='workerid')
+
+failures <- allDataCoded %>% 
+  filter(isCorrect == 0)
+
+
+
+
+
+
+lengthResidualized <- lm(rt ~ blankLength, data = allDataCoded)
+
+summary(lengthResidualized)
+
+allDataCoded <- allDataCoded %>%
+  mutate(
+    lengthResiduals = resid(lengthResidualized)
+  )
+
+grandMean <- mean(allDataCoded$rt, na.rm = TRUE)
+
+allDataCoded <- allDataCoded %>%
+  mutate(rt_resid = resid(lengthResidualized) + grandMean)
+
+
+
+```
+
+
+
+
+```{r}
+summary_df <- allDataCoded %>% 
+  filter(nameType %in% c("weName","youName","filler")) %>% 
+  filter(isCorrect == 1 ) %>% 
+  mutate(macroGroup = ifelse(stimType != "temporal_words", paste(nameType), "temporal_words")) %>% 
+  group_by(macroGroup) %>% 
+  summarize(
+    meanRt = mean(rt_resid, na.rm = TRUE),
+    seRt   = sd(rt_resid, na.rm = TRUE) / sqrt(n())
+  )
+
+ggplot(summary_df, aes(x = macroGroup, y = meanRt,color = macroGroup)) +
+  geom_point(size = 3) +
+  geom_errorbar(aes(ymin = meanRt - seRt, ymax = meanRt + seRt), width = 0.2) +
+  theme_bw() +
+  labs(
+    y = "Residualized RT (ms)",
+    x = "Name Type"
+  )
+```
+
+
+
+```{r}
+summary_df <- allDataCoded %>% 
+  filter(isCorrect == 1) %>% 
+  filter(meanAcc >= .80) %>% 
+  filter(nameType %in% c("weName","youName","filler")) %>% 
+  group_by(nameType,stimType) %>% 
+  summarize(
+    meanRt = mean(rt_resid, na.rm = TRUE),
+    seRt   = sd(rt_resid, na.rm = TRUE) / sqrt(n())
+  )
+
+ggplot(summary_df, aes(x = nameType, y = meanRt, color = stimType)) +
+  geom_point(size = 3, position = position_dodge(0.9)) +
+  geom_errorbar(aes(ymin = meanRt - seRt, ymax = meanRt + seRt), width = 0.2, position = position_dodge(0.9)) +
+  theme_bw() +
+  labs(
+    y = "Residualized RT (ms)",
+    x = "Condition"
+  )
+```
+
+
+
+```{r}
+summary_df <- allDataCoded %>% 
+  filter(nameType %in% c("weName","youName","filler")) %>% 
+  filter(meanAcc >= .8) %>% 
+  group_by(nameType,stimType) %>% 
+  summarize(
+    meanAcc = mean(isCorrect, na.rm = TRUE),
+    seAcc   = sd(isCorrect, na.rm = TRUE) / sqrt(n())
+  )
+
+ggplot(summary_df, aes(x = nameType, y = meanAcc, color = stimType)) +
+  geom_point(size = 3, position = position_dodge(0.9)) +
+  geom_errorbar(aes(ymin = meanAcc - seAcc, ymax = meanAcc + seAcc), width = 0.2, position = position_dodge(0.9)) +
+  theme_bw() +
+  labs(
+    y = "Mean Accuracy",
+    x = "Name Type"
+  ) + 
+  ylim(0,1)
+```
+
+```{r}
+summary_df <- allDataCoded %>% 
+  filter(nameType %in% c("weName","youName","filler")) %>% 
+  filter(meanAcc >= .8) %>% 
+  group_by(nameType) %>% 
+  summarize(
+    meanAcc = mean(isCorrect, na.rm = TRUE),
+    seAcc   = sd(isCorrect, na.rm = TRUE) / sqrt(n())
+  )
+
+ggplot(summary_df, aes(x = nameType, y = meanAcc, color = nameType)) +
+  geom_point(size = 3, position = position_dodge(0.9)) +
+  geom_errorbar(aes(ymin = meanAcc - seAcc, ymax = meanAcc + seAcc), width = 0.2, position = position_dodge(0.9)) +
+  theme_bw() +
+  labs(
+    y = "Mean Accuracy",
+    x = "Name Type"
+  ) 
+```
+
